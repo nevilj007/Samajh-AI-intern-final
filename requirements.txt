@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+ollama
+requests
+pymupdf
+python-dotenv
+jinja2
+pydantic
+asyncpg
+openpyxl
+python-multipart

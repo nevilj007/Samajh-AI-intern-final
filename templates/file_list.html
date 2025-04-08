@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Call Records</title>
+</head>
+<body>
+    <h2>Available Call Records</h2>
+    <ul>
+        {% for call_id in files %}
+            <li>
+                Call ID: {{ call_id }}
+                <a href="/download/{{ call_id }}" download>
+                    <button>Download Excel</button>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

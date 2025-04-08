@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prompt Generator</title>
+</head>
+<body>
+    <form method="post" action="/generate_prompt">
+        <h3>Call Details:</h3>
+        <input type="text" name="phone_number" placeholder="Phone Number" required value="{{ phone_number }}">
+        <input type="text" name="knowledge_base_url" placeholder="Knowledge Base URL" required value="{{ knowledge_base_url }}">
+        <textarea name="questions" placeholder="Questions (one per line)">{{ questions }}</textarea>
+        <h3>Call Output:</h3>
+        <textarea name="call_output" rows="4" cols="50">{{ call_output }}</textarea>
+
+        <h3>Suggestions:</h3>
+        <textarea name="suggestions" rows="4" cols="50">{{ suggestions }}</textarea>
+
+        <input type="submit" value="Generate Prompt">
+    </form>
+
+    {% if generated_prompt %}
+    <form method="post" action="/make_call">
+        <h3>Generated Prompt:</h3>
+        <textarea name="final_prompt" rows="8" cols="80">{{ generated_prompt }}</textarea>
+
+        <h3>Call Details:</h3>
+        <input type="hidden" name="phone_number" value="{{ phone_number }}">
+        <input type="hidden" name="knowledge_base_url" value="{{ knowledge_base_url }}">
+        <input type="hidden" name="questions" value="{{ questions }}">
+
+        <p><strong>Phone Number:</strong> {{ phone_number }}</p>
+        <p><strong>Knowledge Base URL:</strong> {{ knowledge_base_url }}</p>
+        <p><strong>Questions:</strong><br>{{ questions | replace('\n', '<br>') | safe }}</p>
+
+        <input type="submit" value="Make Call">
+    </form>
+    {% endif %}
+</body>
+</html>

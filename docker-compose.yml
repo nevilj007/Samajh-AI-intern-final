@@ -1,0 +1,54 @@
+version: "3.8"
+
+networks:
+  samajhai_network:
+    driver: bridge
+
+services:
+  db:
+    image: ankane/pgvector
+    container_name: chatbot_db
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: chatbot
+    ports:
+      - "5432:5432"
+    networks:
+      - samajhai_network
+    volumes:
+      - chatbot_data:/var/lib/postgresql/data
+      - ./db_setup.sql:/docker-entrypoint-initdb.d/db_setup.sql
+    command: [ "postgres", "-c", "shared_preload_libraries=vector" ]
+
+  app:
+    build: .
+    container_name: chatbot_app
+    restart: always
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - samajhai_network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [ gpu ]
+    environment:
+      BLAND_API_KEY: ${BLAND_API_KEY}
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: chatbot
+      POSTGRES_HOST: db
+      OLLAMA_HOST: localhost
+    volumes:
+      - .:/app
+
+volumes:
+  chatbot_data:
+  ollama_data:
